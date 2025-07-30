@@ -1,5 +1,6 @@
 from database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 
 class User(Base):
     __tablename__ = "users"
@@ -7,6 +8,8 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     email = Column(String, index=True)
+
+    items = relationship("Item", secondary="items_users", backref="owners")
 
 class Item(Base):
     __tablename__ = "items"
