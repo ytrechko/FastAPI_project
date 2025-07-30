@@ -1,5 +1,20 @@
 from pydantic import BaseModel
 
+class ItemBase(BaseModel):
+    title: str
+    description: str
+
+class ItemRead(ItemBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class ItemCreate(ItemBase):
+    pass
+
+
+
 class UserBase(BaseModel):
     name: str
     email: str
@@ -14,16 +29,18 @@ class UserCreate(UserBase):
     pass
 
 
-class ItemBase(BaseModel):
-    title: str
-    description: str
-    id_owner: int
 
-class ItemCreate(ItemBase):
-    id: int
+class ItemUserBase(BaseModel):
+    id_item: int
+    id_user: int
 
+class ItemUserCreate(ItemUserBase):
+    pass
+
+class ItemUserRead(ItemUserBase):
     class Config:
         from_attributes = True
 
-class ItemRead(ItemBase):
-    pass
+
+class UserWithItemsRead(UserRead):
+    items: list[ItemRead] = []
