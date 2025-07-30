@@ -4,13 +4,13 @@ class UserBase(BaseModel):
     name: str
     email: str
 
-class ForTableUser(UserBase):
+class UserRead(UserBase):
     id: int
 
     class Config:
         from_attributes = True
 
-class ForObjUser(UserBase):
+class UserCreate(UserBase):
     pass
 
 
@@ -19,11 +19,11 @@ class ItemBase(BaseModel):
     description: str
     id_owner: int
 
-class ForTableItem(ItemBase):
+class ItemCreate(ItemBase):
     id: int
 
     class Config:
         from_attributes = True
 
-class ForObjItem(ItemBase):
+class ItemRead(ItemBase):
     pass
