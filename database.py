@@ -1,10 +1,9 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-SQL_DB_URL = 'sqlite:///./allusers.db'
+SQL_DB_URL = "postgresql+psycopg2://testuser:1234@localhost:5432/fastapi_proj"
 
-engine = create_engine(SQL_DB_URL, connect_args={"check_same_thread": False})
+engine = create_engine(SQL_DB_URL)
 
 db_session = sessionmaker(autoflush=False, autocommit=False, bind=engine)
 

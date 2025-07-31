@@ -13,8 +13,8 @@ app = FastAPI()
 Base.metadata.create_all(bind=engine)
 
 def get_db():
-    with db_session() as session:
-        yield session
+    with db_session() as db:
+        yield db
 
 @app.post("/users/", response_model=UserRead)
 def create_user(user: UserCreate, db: Session = Depends(get_db)) -> User:
