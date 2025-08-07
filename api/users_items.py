@@ -9,7 +9,7 @@ from crud.user_item import link_user_item, update_link_user_item, delete_user_it
 router = APIRouter(prefix="/user-items", tags=["user-items"])
 
 
-@router.post("/link-user-item/")
+@router.post("/link/")
 async def link_user_item_route(
     user_item: UserItemCreate, db: AsyncSession = Depends(get_db)
 ) -> Dict[str, str]:

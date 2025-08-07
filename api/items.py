@@ -10,7 +10,7 @@ from crud.item import create_item, read_all_items, update_item, delete_item
 router = APIRouter(prefix="/items", tags=["items"])
 
 
-@router.post("/items/")
+@router.post("/")
 async def create_item_route(
     item: ItemCreate, db: AsyncSession = Depends(get_db)
 ) -> Dict[str, str]:
@@ -19,12 +19,12 @@ async def create_item_route(
     return {"status": "item successful created"}
 
 
-@router.get("/items/", response_model=List[ItemRead])
+@router.get("/", response_model=List[ItemRead])
 async def read_all_items_route(db: AsyncSession = Depends(get_db)) -> List[ItemRead]:
     return await read_all_items(db)
 
 
-@router.put("/items/{id}")
+@router.put("/{id}")
 async def update_item_route(
     id: int, item: ItemUpdate, db: AsyncSession = Depends(get_db)
 ) -> Dict[str, str]:
@@ -32,7 +32,7 @@ async def update_item_route(
     return {"status": "item successful updated"}
 
 
-@router.delete("/item/{id_item}")
+@router.delete("/{id_item}")
 async def delete_item_route(
     id_item: int, db: AsyncSession = Depends(get_db)
 ) -> Dict[str, str]:
