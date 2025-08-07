@@ -2,6 +2,7 @@ from database.session import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
+
 class User(Base):
     __tablename__ = "users"
 
@@ -11,12 +12,14 @@ class User(Base):
 
     items = relationship("Item", secondary="users_items", backref="owners")
 
+
 class Item(Base):
     __tablename__ = "items"
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     description = Column(String)
+
 
 class UserItem(Base):
     __tablename__ = "users_items"

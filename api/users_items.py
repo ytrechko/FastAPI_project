@@ -8,17 +8,29 @@ from crud.user_item import link_user_item, update_link_user_item, delete_user_it
 
 router = APIRouter(prefix="/user-items", tags=["user-items"])
 
+
 @router.post("/link-user-item/")
-async def link_user_item_route(user_item: UserItemCreate, db: AsyncSession = Depends(get_db)) -> Dict[str, str]:
+async def link_user_item_route(
+    user_item: UserItemCreate, db: AsyncSession = Depends(get_db)
+) -> Dict[str, str]:
     await link_user_item(user_item, db)
-    return {"status" : "link user-item successful created"}
+    return {"status": "link user-item successful created"}
+
 
 @router.put("/users/{id_user}/items/{id_item}")
-async def update_link_user_item_route(id_user: int, id_item: int , update_user_item: UserItemUpdate, db: AsyncSession = Depends(get_db)) -> Dict[str, str]:
+async def update_link_user_item_route(
+    id_user: int,
+    id_item: int,
+    update_user_item: UserItemUpdate,
+    db: AsyncSession = Depends(get_db),
+) -> Dict[str, str]:
     await update_link_user_item(id_user, id_item, update_user_item, db)
-    return {"status" : "link user-item successful updated"}
+    return {"status": "link user-item successful updated"}
+
 
 @router.delete("/users/{id_user}/items/{id_item}")
-async def delete_user_item_route(id_user: int, id_item: int, db: AsyncSession = Depends(get_db)) -> Dict[str, str]:
+async def delete_user_item_route(
+    id_user: int, id_item: int, db: AsyncSession = Depends(get_db)
+) -> Dict[str, str]:
     await delete_user_item(id_user, id_item, db)
-    return {"status" : "link user-item successful deleted"}
+    return {"status": "link user-item successful deleted"}
