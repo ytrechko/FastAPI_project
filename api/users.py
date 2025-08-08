@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Dict, List
 
-from schemas.obj_schemas import UserCreate, UserRead, UserUpdate, UserWithItemsRead
-from database.session import get_db
-from crud.user import create_user, read_user, read_all_users, update_user, delete_user
+from schemas import UserCreate, UserRead, UserUpdate, UserWithFilesRead
+from database import get_db
+from crud import create_user, read_user, read_all_users, update_user, delete_user
 
 
-router = APIRouter(prefix="/users", tags=["users"])
+router = APIRouter(prefix="/user", tags=["user"])
 
 
 @router.post("/")
@@ -18,31 +18,31 @@ async def create_user_route(
     return {"status": "user successful created"}
 
 
-@router.get("/{id_user}", response_model=UserWithItemsRead)
+@router.get("/{user_id}/", response_model=UserWithFilesRead)
 async def read_user_route(
-    id_user: int, db: AsyncSession = Depends(get_db)
-) -> UserWithItemsRead:
-    return await read_user(id_user, db)
+    user_id: int, db: AsyncSession = Depends(get_db)
+) -> UserWithFilesRead:
+    return await read_user(user_id, db)
 
 
-@router.get("/", response_model=List[UserWithItemsRead])
+@router.get("/", response_model=List[UserWithFilesRead])
 async def read_all_users_route(
     db: AsyncSession = Depends(get_db),
-) -> List[UserWithItemsRead]:
+) -> List[UserWithFilesRead]:
     return await read_all_users(db)
 
 
-@router.put("/{id}/")
+@router.put("/{user_id}/")
 async def update_user_route(
-    id: int, user: UserUpdate, db: AsyncSession = Depends(get_db)
+    user_id: int, user: UserUpdate, db: AsyncSession = Depends(get_db)
 ) -> Dict[str, str]:
-    await update_user(id, user, db)
+    await update_user(user_id, user, db)
     return {"status": "user successful updated"}
 
 
-@router.delete("/{id_user}")
+@router.delete("/{user_id}/")
 async def delete_user_route(
-    id_user: int, db: AsyncSession = Depends(get_db)
+    user_id: int, db: AsyncSession = Depends(get_db)
 ) -> Dict[str, str]:
-    await delete_user(id_user, db)
+    await delete_user(user_id, db)
     return {"status": "user successful deleted"}

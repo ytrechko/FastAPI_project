@@ -4,8 +4,8 @@ from sqlalchemy import select, update, delete
 from sqlalchemy.orm import joinedload
 from typing import List
 
-from schemas.obj_schemas import UserCreate, UserRead, UserUpdate, UserWithItemsRead
-from models.db_models import User, UserItem
+from schemas import UserCreate, UserRead, UserUpdate, UserWithFilesRead
+from models import User
 
 
 async def create_user(user: UserCreate, db: AsyncSession):
@@ -15,19 +15,19 @@ async def create_user(user: UserCreate, db: AsyncSession):
     await db.refresh(db_user)
 
 
-async def read_user(id_user: int, db: AsyncSession) -> UserWithItemsRead:
-    stmt = select(User).options(joinedload(User.items)).where(User.id == id_user)
+async def read_user(user_id: int, db: AsyncSession) -> UserWithFilesRead:
+    stmt = select(User).options(joinedload(User.files)).where(User.id == user_id)
     result = await db.execute(stmt)
     user = result.scalars().first()
 
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail=f"User with {user_id} id not found")
 
     return user
 
 
-async def read_all_users(db: AsyncSession) -> List[UserWithItemsRead]:
-    stmt = select(User).options(joinedload(User.items))
+async def read_all_users(db: AsyncSession) -> List[UserWithFilesRead]:
+    stmt = select(User).options(joinedload(User.files))
     result = await db.execute(stmt)
     users = result.unique().scalars().all()
 
@@ -48,17 +48,14 @@ async def update_user(id: int, user: UserUpdate, db: AsyncSession):
     await db.commit()
 
 
-async def delete_user(id_user: int, db: AsyncSession):
-    stmt_availability_user = select(User).where(User.id == id_user)
+async def delete_user(user_id: int, db: AsyncSession):
+    stmt_availability_user = select(User).where(User.id == user_id)
     result = await db.execute(stmt_availability_user)
     availability_user = result.scalar_one_or_none()
     if not availability_user:
-        raise HTTPException(status_code=404, detail=f"User with {id_user} not found")
+        raise HTTPException(status_code=404, detail=f"User with {user_id} not found")
 
-    stmt_delete_links = delete(UserItem).where(UserItem.id_user == id_user)
-    await db.execute(stmt_delete_links)
-
-    stmt_delete_user = delete(User).where(User.id == id_user)
+    stmt_delete_user = delete(User).where(User.id == user_id)
     await db.execute(stmt_delete_user)
 
     await db.commit()
